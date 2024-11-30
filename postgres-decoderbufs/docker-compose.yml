@@ -1,0 +1,27 @@
+services:
+  postgres:
+    container_name: postgres
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_ROOT_PASSWORD}
+      POSTGRES_USER: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.volumes/postgres_volume:/var/lib/postgresql/data
+      - ./postgresql.conf.sample:/usr/local/share/postgresql/postgresql.conf.sample
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    networks:
+      - inet
+
+volumes:
+  postgres-data:
+    driver: local
+
+networks:
+  inet:
+    external: true
+    name: inet
