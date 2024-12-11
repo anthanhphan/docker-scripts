@@ -68,22 +68,16 @@ services:
 
   kafka-connect:
     container_name: kafka-connect
-    image: confluentinc/cp-kafka-connect:latest
+    image: debezium/connect:3.0.0.Final
+    restart: always
     ports:
       - "8083:8083"
     environment:
-      CONNECT_BOOTSTRAP_SERVERS: kafka-broker-1:9092,kafka-broker-2:9095,kafka-broker-3:9097
-      CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect
-      CONNECT_GROUP_ID: connect-cluster
-      CONNECT_CONFIG_STORAGE_TOPIC: connect-configs
-      CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets
-      CONNECT_STATUS_STORAGE_TOPIC: connect-statuses
-      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
-      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
-      CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: false
-      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: false
-      CONNECT_PLUGIN_PATH: /usr/share/java,/etc/kafka-connect/jars
-      CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
+      CONFIG_STORAGE_TOPIC: connect_configs
+      OFFSET_STORAGE_TOPIC: connect_offsets
+      STATUS_STORAGE_TOPIC: connect_statuses
+      KAFKA_CONNECT_PLUGINS_DIR: /usr/share/java,/etc/kafka-connect/jars
+      BOOTSTRAP_SERVERS: kafka-broker-1:9092,kafka-broker-2:9095,kafka-broker-3:9097
     volumes:
       - ./plugins:/etc/kafka-connect/jars
     depends_on:
